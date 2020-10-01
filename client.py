@@ -10,6 +10,9 @@ class NewClient:
             sock=None,
             thread=None
     ):
+        while not nickname.strip():
+            print('Введите имя, содержащее символы')
+            nickname = input('Введите имя пользователя: ')
         self.server = server
         self.nickname = nickname
         self.sock = sock
@@ -35,12 +38,14 @@ class NewClient:
         while True:
             our_time = datetime.now().strftime('%H:%M:%S')
             message = input()
-            if message.upper() != '$EXIT':
-                self.sock.sendto(('[' + self.nickname + ']' + '[' + our_time + ']' + message).encode('utf-8'),
-                                 self.server)
-            else:
+            if message.upper() == '$EXIT':
                 self.sock.sendto((self.nickname + ' выходит из чата').encode('utf-8'), self.server)
                 break
+            elif not message.strip():
+                continue
+            else:
+                self.sock.sendto(('[' + self.nickname + ']' + '[' + our_time + ']' + message).encode('utf-8'),
+                                 self.server)
         self.sock.close()
 
 
